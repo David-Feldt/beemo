@@ -67,3 +67,9 @@ components:
     groups: [audio]
     channels:
       /s/microphone/audio: read
+
+  speaker:
+    file: components/speaker.py
+    groups: [speaker]
+    channels:
+      /s/speaker/audio: read

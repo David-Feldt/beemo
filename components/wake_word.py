@@ -3,7 +3,7 @@ import base64
 import json
 import os
 
-import botos
+import bot
 from vosk import Model, KaldiRecognizer
 
 RATE = 16000
@@ -19,7 +19,7 @@ async def main():
 
     rec = KaldiRecognizer(model, RATE)
 
-    async for msg in botos.subscribe("/s/microphone/audio"):
+    async for msg in bot.subscribe("/s/microphone/audio"):
         raw = base64.b64decode(msg["data"])
 
         if rec.AcceptWaveform(raw):
@@ -31,7 +31,7 @@ async def main():
 
         if WAKE_WORD in text:
             print("listening")
-            await botos.publish("/s/wake/detected", {
+            await bot.publish("/s/wake/detected", {
                 "wake_word": WAKE_WORD,
                 "transcript": text,
             })
@@ -39,4 +39,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    botos.run(main())
+    bot.run(main())

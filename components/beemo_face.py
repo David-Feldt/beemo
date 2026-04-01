@@ -3,7 +3,7 @@ import base64
 import io
 import random
 
-import botos
+import bot
 from PIL import Image, ImageDraw
 
 WIDTH = 320
@@ -68,7 +68,7 @@ async def main():
         frame = _draw_face(blink=blink, expression=current_expr)
         data = _image_to_b64(frame)
 
-        await botos.publish("/s/screen/display", {
+        await bot.publish("/s/screen/display", {
             "type": "image",
             "data": data,
         })
@@ -78,4 +78,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    botos.run(main())
+    bot.run(main())

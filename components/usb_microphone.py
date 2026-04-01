@@ -2,7 +2,7 @@ import asyncio
 import base64
 import re
 
-import botos
+import bot
 
 CHANNELS = 1
 RATE = 16000
@@ -47,7 +47,7 @@ async def main():
             data = await proc.stdout.readexactly(PERIOD_BYTES)
             audio_b64 = base64.b64encode(data).decode("utf-8")
 
-            await botos.publish("/s/microphone/audio", {
+            await bot.publish("/s/microphone/audio", {
                 "format": "pcm_s16le",
                 "channels": CHANNELS,
                 "rate": RATE,
@@ -60,4 +60,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    botos.run(main())
+    bot.run(main())

@@ -2,7 +2,7 @@ import asyncio
 import base64
 import io
 
-import botos
+import bot
 import spidev
 import gpiod
 from gpiod.line import Direction, Value
@@ -13,7 +13,7 @@ PANEL_H = 320
 WIDTH = 320
 HEIGHT = 240
 
-RST_PIN = 19
+RST_PIN = 6
 DC_PIN = 26
 BL_PIN = 13
 
@@ -137,7 +137,7 @@ async def main():
     _show_image(spi, lines, splash)
 
     try:
-        async for msg in botos.subscribe("/s/screen/display"):
+        async for msg in bot.subscribe("/s/screen/display"):
             if msg.get("type") == "image":
                 raw = base64.b64decode(msg["data"])
                 img = Image.open(io.BytesIO(raw))
@@ -153,4 +153,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    botos.run(main())
+    bot.run(main())
