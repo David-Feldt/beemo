@@ -1,0 +1,4 @@
+.bot/
+.botos/
+__pycache__/
+*.pyc

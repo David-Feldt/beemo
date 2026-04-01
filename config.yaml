@@ -1,0 +1,69 @@
+robot:
+  name: beemoAI
+
+router:
+  host: localhost
+  port: 5555
+
+components:
+  # example:
+  #   file: components/example.py
+  #   channels:
+  #     /s/example/data: write
+
+  pi_camera:
+    file: components/pi_camera.py
+    groups: [camera]
+    requires:
+      - rpicam-hello
+    channels:
+      /s/camera/frame: write
+
+  stream_display:
+    file: components/stream_display.py
+    groups: [camera]
+    channels:
+      /s/camera/frame: read
+
+  motor_driver:
+    file: components/motor_driver.py
+    groups: [drive]
+    channels:
+      /c/motor/drive: read
+
+  keyboard_control:
+    file: components/keyboard_control.py
+    groups: [drive]
+    channels:
+      /c/motor/drive: write
+
+  screen_display:
+    file: components/screen_display.py
+    groups: [screen]
+    channels:
+      /s/screen/display: read
+
+  beemo_face:
+    file: components/beemo_face.py
+    groups: [screen]
+    channels:
+      /s/screen/display: write
+
+  usb_microphone:
+    file: components/usb_microphone.py
+    groups: [audio]
+    channels:
+      /s/microphone/audio: write
+
+  wake_word:
+    file: components/wake_word.py
+    groups: [audio]
+    channels:
+      /s/microphone/audio: read
+      /s/wake/detected: write
+
+  audio_visualizer:
+    file: components/audio_visualizer.py
+    groups: [audio]
+    channels:
+      /s/microphone/audio: read
