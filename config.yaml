@@ -27,7 +27,7 @@ components:
 
   motor_driver:
     file: components/motor_driver.py
-    groups: [drive]
+    groups: [drive, dashboard]
     channels:
       /c/motor/drive: read
 
@@ -39,28 +39,21 @@ components:
 
   screen_display:
     file: components/screen_display.py
-    groups: [screen]
+    groups: [screen, dashboard]
     channels:
       /s/screen/display: read
 
   beemo_face:
     file: components/beemo_face.py
-    groups: [screen]
+    groups: [screen, dashboard]
     channels:
       /s/screen/display: write
 
   usb_microphone:
     file: components/usb_microphone.py
-    groups: [audio]
+    groups: [audio, dashboard]
     channels:
       /s/microphone/audio: write
-
-  wake_word:
-    file: components/wake_word.py
-    groups: [audio]
-    channels:
-      /s/microphone/audio: read
-      /s/wake/detected: write
 
   audio_visualizer:
     file: components/audio_visualizer.py
@@ -70,6 +63,35 @@ components:
 
   speaker:
     file: components/speaker.py
-    groups: [speaker]
+    groups: [speaker, dashboard]
     channels:
       /s/speaker/audio: read
+
+  test_speaker:
+    file: components/test_speaker.py
+    groups: [speaker]
+    channels:
+      /s/speaker/audio: write
+
+  button_matrix:
+    file: components/button_matrix.py
+    groups: [buttons, dashboard]
+    channels:
+      /s/buttons/event: write
+
+  button_reader:
+    file: components/button_reader.py
+    groups: [buttons]
+    channels:
+      /s/buttons/event: read
+
+  main:
+    file: components/main.py
+    groups: [dashboard]
+    channels:
+      /s/camera/frame: read
+      /s/screen/display: readwrite
+      /s/microphone/audio: read
+      /s/speaker/audio: readwrite
+      /c/motor/drive: readwrite
+      /s/buttons/event: read
