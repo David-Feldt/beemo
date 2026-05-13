@@ -11,13 +11,13 @@ components:
   #   channels:
   #     /s/example/data: write
 
-  pi_camera:
-    file: components/pi_camera.py
-    groups: [camera]
-    requires:
-      - rpicam-hello
-    channels:
-      /s/camera/frame: write
+  # pi_camera:
+  #   file: components/pi_camera.py
+  #   groups: [camera]
+  #   requires:
+  #     - rpicam-hello
+  #   channels:
+  #     /s/camera/frame: write
 
   stream_display:
     file: components/stream_display.py
@@ -25,11 +25,11 @@ components:
     channels:
       /s/camera/frame: read
 
-  motor_driver:
-    file: components/motor_driver.py
-    groups: [drive, dashboard]
-    channels:
-      /c/motor/drive: read
+  # motor_driver:
+  #   file: components/motor_driver.py
+  #   groups: [drive, dashboard]
+  #   channels:
+  #     /c/motor/drive: read
 
   keyboard_control:
     file: components/keyboard_control.py
@@ -51,9 +51,10 @@ components:
 
   usb_microphone:
     file: components/usb_microphone.py
-    groups: [audio, dashboard]
+    groups: [audio, dashboard, gemini]
     channels:
       /s/microphone/audio: write
+      /s/audio/mic_enabled: read
 
   audio_visualizer:
     file: components/audio_visualizer.py
@@ -63,7 +64,7 @@ components:
 
   speaker:
     file: components/speaker.py
-    groups: [speaker, dashboard]
+    groups: [speaker, dashboard, gemini]
     channels:
       /s/speaker/audio: read
 
@@ -72,6 +73,34 @@ components:
     groups: [speaker]
     channels:
       /s/speaker/audio: write
+
+  audio_loopback:
+    file: components/audio_loopback.py
+    groups: [loopback]
+    channels:
+      /s/microphone/audio: read
+      /s/speaker/audio: write
+
+  usb_microphone_loopback:
+    file: components/usb_microphone.py
+    groups: [loopback]
+    channels:
+      /s/microphone/audio: write
+      /s/audio/mic_enabled: read
+
+  speaker_loopback:
+    file: components/speaker.py
+    groups: [loopback]
+    channels:
+      /s/speaker/audio: read
+
+  gemini_live:
+    file: components/gemini_live.py
+    groups: [gemini, dashboard]
+    channels:
+      /s/microphone/audio: read
+      /s/speaker/audio: write
+      /s/audio/mic_enabled: write
 
   button_matrix:
     file: components/button_matrix.py

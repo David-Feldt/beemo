@@ -11,6 +11,8 @@ SAMPLE_BYTES = 2
 FRAME_SIZE = CHANNELS * SAMPLE_BYTES
 PERIOD_BYTES = CHUNK * FRAME_SIZE
 
+_mic_enabled = True
+
 
 async def _find_device():
     proc = await asyncio.create_subprocess_exec(
@@ -22,12 +24,25 @@ async def _find_device():
     for line in stdout.decode().splitlines():
         m = re.match(r"card\s+(\d+).*device\s+(\d+)", line, re.IGNORECASE)
         if m:
-            return f"hw:{m.group(1)},{m.group(2)}"
+            return f"plughw:{m.group(1)},{m.group(2)}"
     return "default"
+
+
+async def _watch_enabled():
+    """Listen for /s/audio/mic_enabled and update the publish gate."""
+    global _mic_enabled
+    async for msg in bot.subscribe("/s/audio/mic_enabled"):
+        new_state = bool(msg.get("enabled", True))
+        if new_state != _mic_enabled:
+            _mic_enabled = new_state
+            print(f"[mic] {'ENABLED' if new_state else 'MUTED'}", flush=True)
 
 
 async def main():
     device = await _find_device()
+    print(f"USB mic ready (capturing from {device} @ {RATE} Hz mono)", flush=True)
+
+    asyncio.create_task(_watch_enabled())
 
     proc = await asyncio.create_subprocess_exec(
         "arecord",
@@ -45,8 +60,10 @@ async def main():
     try:
         while True:
             data = await proc.stdout.readexactly(PERIOD_BYTES)
-            audio_b64 = base64.b64encode(data).decode("utf-8")
+            if not _mic_enabled:
+                continue
 
+            audio_b64 = base64.b64encode(data).decode("utf-8")
             await bot.publish("/s/microphone/audio", {
                 "format": "pcm_s16le",
                 "channels": CHANNELS,
